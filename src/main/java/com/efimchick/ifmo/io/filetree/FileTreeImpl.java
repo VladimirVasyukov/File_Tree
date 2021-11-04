@@ -8,12 +8,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class FileTreeImpl implements FileTree {
-    private static final String INDENT = "  ";
+    private static final String INDENT_NULL = "";
     private static final String INDENT_SMALL = " ";
-    private static final String LIST = "│";
-    private static final String LIST_ITEM_LAST = "└";
-    private static final String LIST_ITEM_END = "─ ";
-    private static final String LIST_ITEM_START = "├";
+    private static final String INDENT_LARGE = "  ";
+    private static final String BOX_DRAWINGS_LIGHT_VERTICAL_SYM = "│";
+    private static final String BOX_DRAWINGS_LIGHT_UP_AND_RIGHT_SYM = "└";
+    private static final String BOX_DRAWINGS_LIGHT_HORIZONTAL_SYM = "─ ";
+    private static final String BOX_DRAWINGS_LIGHT_VERTICAL_AND_RIGHT_SYM = "├";
+    private static final String BYTES = "bytes";
 
     @Override
     public Optional<String> tree(Path path) {
@@ -22,23 +24,21 @@ public class FileTreeImpl implements FileTree {
         }
 
         File file = path.toFile();
-
         if (file.isFile()) {
             return Optional.of(getFileName(file));
         }
 
-        return Optional.of(getTree(file, "").tree);
-    }
-
-    private String getName(String name, long size) {
-        return name + INDENT_SMALL + size + INDENT_SMALL + "bytes";
+        return Optional.of(getTree(file, INDENT_NULL).tree);
     }
 
     private String getFileName(File file) {
         String fileName = file.getName();
         long fileSize = file.length();
-
         return getName(fileName, fileSize);
+    }
+
+    private String getName(String name, long size) {
+        return name + INDENT_SMALL + size + INDENT_SMALL + BYTES;
     }
 
     private TreeResult getTree(File directory, String indent) {
@@ -50,7 +50,6 @@ public class FileTreeImpl implements FileTree {
             if (result == 0) {
                 result = a.getName().compareToIgnoreCase(b.getName());
             }
-
             return result;
         });
 
@@ -67,18 +66,18 @@ public class FileTreeImpl implements FileTree {
             if (isLast) {
                 indentStringBuilder.append(INDENT_SMALL);
             } else {
-                indentStringBuilder.append(LIST);
+                indentStringBuilder.append(BOX_DRAWINGS_LIGHT_VERTICAL_SYM);
             }
 
-            indentStringBuilder.append(INDENT);
+            indentStringBuilder.append(INDENT_LARGE);
 
             if (isLast) {
-                treeStringBuilder.append(LIST_ITEM_LAST);
+                treeStringBuilder.append(BOX_DRAWINGS_LIGHT_UP_AND_RIGHT_SYM);
             } else {
-                treeStringBuilder.append(LIST_ITEM_START);
+                treeStringBuilder.append(BOX_DRAWINGS_LIGHT_VERTICAL_AND_RIGHT_SYM);
             }
 
-            treeStringBuilder.append(LIST_ITEM_END);
+            treeStringBuilder.append(BOX_DRAWINGS_LIGHT_HORIZONTAL_SYM);
 
             if (f.isFile()) {
                 size += f.length();
