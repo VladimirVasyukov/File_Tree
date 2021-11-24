@@ -63,19 +63,13 @@ public class FileTreeImpl implements FileTree {
             StringBuilder indentStringBuilder = new StringBuilder(indent);
 
             boolean isLast = f.equals(files.get(files.size() - 1));
-            if (isLast) {
-                indentStringBuilder.append(INDENT_SMALL);
-            } else {
-                indentStringBuilder.append(BOX_DRAWINGS_LIGHT_VERTICAL_SYM);
-            }
+            indentStringBuilder.append(isLast ? INDENT_SMALL
+                : BOX_DRAWINGS_LIGHT_VERTICAL_SYM);
 
             indentStringBuilder.append(INDENT_LARGE);
 
-            if (isLast) {
-                treeStringBuilder.append(BOX_DRAWINGS_LIGHT_UP_AND_RIGHT_SYM);
-            } else {
-                treeStringBuilder.append(BOX_DRAWINGS_LIGHT_VERTICAL_AND_RIGHT_SYM);
-            }
+            treeStringBuilder.append(isLast ? BOX_DRAWINGS_LIGHT_UP_AND_RIGHT_SYM
+                : BOX_DRAWINGS_LIGHT_VERTICAL_AND_RIGHT_SYM);
 
             treeStringBuilder.append(BOX_DRAWINGS_LIGHT_HORIZONTAL_SYM);
 
